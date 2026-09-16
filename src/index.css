@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme {
+  --color-indigo-deep: #1E1B4B;
+  --color-saffron: #F59E0B;
+  --color-surface: #FAFAF7;
+  --color-text-main: #18181B;
+  --color-danger: #EF4444;
+  --color-success: #10B981;
+  --color-teal: #0D9488;
+  --color-teal-light: #CCFBF1;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #FAFAF7;
+  color: #18181B;
+  margin: 0;
+}
+
+.font-hind {
+  font-family: 'Hind', sans-serif;
+}
+
+/* Shimmer loading */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Flash highlight on stock change */
+.flash {
+  animation: flash 0.6s ease-out;
+}
+@keyframes flash {
+  0% { background-color: #FEF3C7; }
+  100% { background-color: transparent; }
+}
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1), 0 4px 10px -6px rgba(0,0,0,0.05);
+}
+
+/* Button hover scale */
+.btn-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.btn-hover:hover:not(:disabled) {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px -2px rgba(0,0,0,0.15);
+}
+.btn-hover:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Toast slide in */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast-in {
+  animation: slideInRight 0.35s ease-out forwards;
+}
+
+/* Pulse badge */
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+.pulse-badge {
+  animation: pulseBadge 1s ease-in-out infinite;
+}
+
+/* Count-up fade */
+@keyframes countFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.count-fade {
+  animation: countFadeIn 0.6s ease-out forwards;
+}
+
+/* Checkmark draw */
+@keyframes checkDraw {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+.check-anim path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: checkDraw 0.4s ease-out 0.1s forwards;
+}
+
+/* Section header gradient line */
+.section-line {
+  height: 3px;
+  border-radius: 2px;
+  width: 60px;
+}
+
+/* Scrollbar subtle */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
