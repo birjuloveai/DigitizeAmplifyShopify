@@ -120,7 +120,7 @@ function AIModelShots() {
           {views.map((label) => (
             <div key={label} className="relative rounded-xl overflow-hidden group" style={{ aspectRatio: "3/4" }}>
               <img
-                src={`/images/${encodeURIComponent(selected.image)}`}
+                src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(selected.image)}`}
                 alt={`${selected.name} - ${label}`}
                 loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -209,7 +209,7 @@ function LiveStockBoard() {
               <tr key={sku.id} className={`border-b border-gray-50 hover:bg-indigo-50/50 transition-colors ${i % 2 === 0 ? "bg-gray-50/30" : ""}`}>
                 <td className="p-3">
                   <div className="flex items-center gap-2">
-                    <img src={`/images/${encodeURIComponent(sku.image)}`} alt="" className="w-8 h-8 rounded object-cover" loading="lazy" />
+                    <img src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`} alt="" className="w-8 h-8 rounded object-cover" loading="lazy" />
                     <span className="font-medium">{sku.name}</span>
                   </div>
                 </td>
@@ -228,7 +228,7 @@ function LiveStockBoard() {
       <div className="md:hidden p-4 space-y-2">
         {filtered.map((sku) => (
           <div key={sku.id} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50/50 border border-gray-100">
-            <img src={`/images/${encodeURIComponent(sku.image)}`} alt="" className="w-10 h-12 rounded-lg object-cover" loading="lazy" style={{ aspectRatio: "3/4" }} />
+            <img src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`} alt="" className="w-10 h-12 rounded-lg object-cover" loading="lazy" style={{ aspectRatio: "3/4" }} />
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-center">
                 <span className="font-medium text-sm truncate">{sku.name}</span>
@@ -278,7 +278,7 @@ function DeadStockAlert() {
         {deadItems.map((sku) => (
           <div key={sku.id} className="bg-white rounded-xl p-4 border border-red-100 card-hover">
             <div className="flex gap-3">
-              <img src={`/images/${encodeURIComponent(sku.image)}`} alt={sku.name} loading="lazy" className="w-14 h-18 rounded-lg object-cover" style={{ aspectRatio: "3/4" }} />
+              <img src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`} alt={sku.name} loading="lazy" className="w-14 h-18 rounded-lg object-cover" style={{ aspectRatio: "3/4" }} />
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <div>

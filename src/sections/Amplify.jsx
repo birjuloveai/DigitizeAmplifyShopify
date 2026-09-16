@@ -49,7 +49,7 @@ function WhatsAppBlast() {
             }`}
           >
             <input type="checkbox" checked={selected.includes(sku.id)} onChange={() => toggle(sku.id)} className="accent-saffron w-4 h-4" />
-            <img src={`/images/${encodeURIComponent(sku.image)}`} alt={sku.name} loading="lazy" className="w-8 h-10 object-cover rounded" style={{ aspectRatio: "3/4" }} />
+            <img src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`} alt={sku.name} loading="lazy" className="w-8 h-10 object-cover rounded" style={{ aspectRatio: "3/4" }} />
             <span className="truncate">{sku.name} — {"\u20B9"}{sku.mrp}</span>
           </label>
         ))}

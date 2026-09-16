@@ -5,7 +5,7 @@ export default function SkuCard({ sku }) {
     <div className="bg-white rounded-xl border border-gray-200 p-4 fade-in card-hover">
       <div className="flex gap-4">
         <img
-          src={`/images/${encodeURIComponent(sku.image)}`}
+          src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`}
           alt={sku.name}
           loading="lazy"
           className="w-24 h-32 object-cover rounded-lg shadow-sm"
