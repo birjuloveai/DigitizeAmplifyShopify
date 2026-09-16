@@ -5,6 +5,7 @@ import StatusBadge from "../components/StatusBadge";
 import MetricBox from "../components/MetricBox";
 import SectionHeader from "../components/SectionHeader";
 import Toast from "../components/Toast";
+import Lightbox from "../components/Lightbox";
 
 function ScanToCatalog() {
   const [scanIndex, setScanIndex] = useState(0);
@@ -65,6 +66,7 @@ function AIModelShots() {
   const [views, setViews] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [lightbox, setLightbox] = useState(null);
   const labels = ["Front View", "Side View", "Back View", "Detail", "Full Length", "Lifestyle"];
   const selected = skus.find((s) => s.id === selectedId);
 
@@ -117,20 +119,30 @@ function AIModelShots() {
 
       {views && !loading && selected && (
         <div className="grid grid-cols-3 gap-2 fade-in">
-          {views.map((label) => (
-            <div key={label} className="relative rounded-xl overflow-hidden group" style={{ aspectRatio: "3/4" }}>
-              <img
-                src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(selected.image)}`}
-                alt={`${selected.name} - ${label}`}
-                loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <span className="absolute bottom-2 left-2 text-white text-[10px] sm:text-xs font-medium">{label}</span>
-            </div>
-          ))}
+          {views.map((label) => {
+            const imgSrc = `${import.meta.env.BASE_URL}images/${encodeURIComponent(selected.image)}`;
+            return (
+              <div
+                key={label}
+                className="relative rounded-xl overflow-hidden group cursor-pointer"
+                style={{ aspectRatio: "3/4" }}
+                onClick={() => setLightbox({ src: imgSrc, alt: `${selected.name} — ${label}` })}
+              >
+                <img
+                  src={imgSrc}
+                  alt={`${selected.name} - ${label}`}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <span className="absolute bottom-2 left-2 text-white text-[10px] sm:text-xs font-medium">{label}</span>
+              </div>
+            );
+          })}
         </div>
       )}
+
+      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />}
 
       <MetricBox variant="indigo">
         <strong>{"\u20B9"}0 photography cost</strong> &middot; 6 angles in 2 sec

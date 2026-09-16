@@ -1,15 +1,21 @@
+import { useState } from "react";
 import StatusBadge from "./StatusBadge";
+import Lightbox from "./Lightbox";
 
 export default function SkuCard({ sku }) {
+  const [showLightbox, setShowLightbox] = useState(false);
+  const imgSrc = `${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`;
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-4 fade-in card-hover">
       <div className="flex gap-4">
         <img
-          src={`${import.meta.env.BASE_URL}images/${encodeURIComponent(sku.image)}`}
+          src={imgSrc}
           alt={sku.name}
           loading="lazy"
-          className="w-24 h-32 object-cover rounded-lg shadow-sm"
+          className="w-24 h-32 object-cover rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
           style={{ aspectRatio: "3/4" }}
+          onClick={() => setShowLightbox(true)}
         />
         <div className="flex-1 text-left">
           <div className="flex items-center justify-between mb-1">
@@ -24,6 +30,7 @@ export default function SkuCard({ sku }) {
           </div>
         </div>
       </div>
+      {showLightbox && <Lightbox src={imgSrc} alt={sku.name} onClose={() => setShowLightbox(false)} />}
     </div>
   );
 }
