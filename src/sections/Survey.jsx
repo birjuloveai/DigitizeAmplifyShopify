@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { saveSurveyResponse, exportCSV, getSurveyResponses } from "../utils/surveyStorage";
-import { persistToGitHub } from "../utils/githubPersist";
+import { persistToSheet } from "../utils/sheetsPersist";
 
 const questions = [
   {
@@ -139,7 +139,7 @@ export default function Survey() {
     } else {
       setSaving(true);
       saveSurveyResponse(answers);
-      await persistToGitHub(answers);
+      await persistToSheet(answers);
       setSaving(false);
       setSubmitted(true);
     }
