@@ -10,25 +10,44 @@
 // 5. Execute as: Me
 // 6. Who has access: Anyone
 // 7. Click Deploy and copy the Web App URL
-// 8. Paste the URL into your .env file as VITE_SHEET_WEBHOOK_URL
+// 8. Set it as VITE_SHEET_WEBHOOK_URL in your GitHub repo secrets
 //
-// This creates a Google Sheet automatically on first submission.
+// First submission creates a Google Sheet in your Drive.
+// All subsequent submissions append to the SAME sheet.
 // ===========================================================
 
-const SHEET_NAME = "Survey Responses";
+var SHEET_NAME = "Survey Responses";
+var SPREADSHEET_TITLE = "Digitize Amplify Shopify — Surveys";
+
+function getOrCreateSpreadsheet() {
+  var props = PropertiesService.getScriptProperties();
+  var ssId = props.getProperty("SPREADSHEET_ID");
+
+  // Try opening saved spreadsheet
+  if (ssId) {
+    try {
+      return SpreadsheetApp.openById(ssId);
+    } catch (e) {
+      // Spreadsheet was deleted — create a new one
+    }
+  }
+
+  // Create new spreadsheet and save its ID
+  var ss = SpreadsheetApp.create(SPREADSHEET_TITLE);
+  props.setProperty("SPREADSHEET_ID", ss.getId());
+  return ss;
+}
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
-    const ss = SpreadsheetApp.getActiveSpreadsheet()
-      || SpreadsheetApp.create("Digitize Amplify Shopify — Surveys");
-
-    let sheet = ss.getSheetByName(SHEET_NAME);
+    var data = JSON.parse(e.postData.contents);
+    var ss = getOrCreateSpreadsheet();
+    var sheet = ss.getSheetByName(SHEET_NAME);
 
     // Create header row on first run
     if (!sheet) {
       sheet = ss.insertSheet(SHEET_NAME);
-      const headers = [
+      var headers = [
         "Timestamp",
         "Q1 — What do you sell?",
         "Q2 — Monthly sales",
