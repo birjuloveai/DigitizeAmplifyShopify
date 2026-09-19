@@ -51,7 +51,7 @@ function App() {
             <span className="text-saffron font-semibold">S</span>hopify
           </div>
           <div className="text-center">Demo data only — all figures are illustrative</div>
-          <div className="font-hind text-white/25">{"\u092F\u0939 \u0915\u0947\u0935\u0932 \u092A\u094D\u0930\u0926\u0930\u094D\u0936\u0928 \u0915\u0947 \u0932\u093F\u090F \u0939\u0948"}</div>
+          <div className="font-hind text-white/25">{"இது விளக்கத்திற்காக மட்டுமே"}</div>
         </div>
       </footer>
 

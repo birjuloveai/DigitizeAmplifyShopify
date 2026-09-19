@@ -377,7 +377,7 @@ export default function Amplify({ resetKey }) {
         <SectionHeader
           title="Amplify"
           subtitle="Bring customers back and fill your store every day"
-          hindi="ग्राहकों को वापस लाएं, दुकान हर दिन भरें"
+          hindi="வாடிக்கையாளர்களை மீண்டும் அழைக்கவும், கடையை தினமும் நிரப்பவும்"
           variant="saffron"
           features={[
             { id: "a1", label: "WhatsApp" },

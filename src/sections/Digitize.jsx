@@ -337,7 +337,7 @@ export default function Digitize({ resetKey }) {
         <SectionHeader
           title="Digitize"
           subtitle="Turn your physical store into a digital catalog in minutes"
-          hindi="अपनी दुकान को मिनटों में डिजिटल बनाएं"
+          hindi="உங்கள் கடையை நிமிடங்களில் டிஜிட்டலாக்குங்கள்"
           variant="indigo"
           features={[
             { id: "d1", label: "Scan" },
