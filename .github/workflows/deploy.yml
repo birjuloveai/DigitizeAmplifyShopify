@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, tamil-survey-persist, hindi-survey-persist]
 
 permissions:
   contents: read
@@ -17,16 +17,38 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+
+      # Build Tamil version (root path)
+      - uses: actions/checkout@v4
+        with:
+          ref: tamil-survey-persist
+          path: tamil
+      - run: cd tamil && npm ci && npm run build
+        env:
+          VITE_SHEET_WEBHOOK_URL: ${{ secrets.VITE_SHEET_WEBHOOK_URL }}
+
+      # Build Hindi version (/HN/ path)
+      - uses: actions/checkout@v4
+        with:
+          ref: hindi-survey-persist
+          path: hindi
+      - run: cd hindi && npm ci && npm run build
+        env:
+          VITE_SHEET_WEBHOOK_URL: ${{ secrets.VITE_SHEET_WEBHOOK_URL }}
+
+      # Combine into single site
+      - run: |
+          mkdir -p combined
+          cp -r tamil/dist/* combined/
+          mkdir -p combined/HN
+          cp -r hindi/dist/* combined/HN/
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: combined
 
   deploy:
     needs: build

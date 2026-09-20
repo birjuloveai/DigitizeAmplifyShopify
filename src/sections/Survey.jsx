@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { saveSurveyResponse, exportCSV, getSurveyResponses } from "../utils/surveyStorage";
+import { persistToSheet } from "../utils/sheetsPersist";
 
 const questions = [
   {
@@ -136,6 +137,7 @@ export default function Survey() {
       setStep((s) => s + 1);
     } else {
       saveSurveyResponse(answers);
+      persistToSheet(answers);
       setSubmitted(true);
     }
   };
