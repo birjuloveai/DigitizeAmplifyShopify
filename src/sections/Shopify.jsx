@@ -337,7 +337,7 @@ export default function Shopify({ resetKey }) {
         <SectionHeader
           title="Shopify"
           subtitle="Sell online with zero tech hassle — sync, ship, grow"
-          hindi="ऑनलाइन बेचें, बिना तकनीकी झंझट — सिंक, शिप, ग्रो"
+          hindi="ಆನ್‌ಲೈನ್ ಮಾರಾಟ, ತಾಂತ್ರಿಕ ತೊಂದರೆಯಿಲ್ಲ — ಸಿಂಕ್, ಶಿಪ್, ಬೆಳೆಯಿರಿ"
           variant="teal"
           features={[
             { id: "s1", label: "Sync" },

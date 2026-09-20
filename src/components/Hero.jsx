@@ -46,7 +46,7 @@ export default function Hero() {
               One platform to catalog stock, bring back customers, and sell online — built for Indian retail.
             </p>
             <p className="mt-2 text-sm text-white/40 font-hind">
-              आपकी दुकान, डिजिटल। आपकी पहुंच, असीमित।
+              {"ನಿಮ್ಮ ಅಂಗಡಿ, ಡಿಜಿಟಲ್. ನಿಮ್ಮ ತಲುಪು, ಅಸೀಮಿತ."}
             </p>
             <div className="mt-6 flex gap-3">
               <button
