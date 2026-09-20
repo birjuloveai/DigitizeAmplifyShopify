@@ -1,123 +1,124 @@
 import { useState } from "react";
 import { saveSurveyResponse, exportCSV, getSurveyResponses } from "../utils/surveyStorage";
+import { persistToSheet } from "../utils/sheetsPersist";
 
 const questions = [
   {
     key: "q1_sells",
     en: "What do you sell?",
-    hi: "\u0906\u092A \u0915\u094D\u092F\u093E \u092C\u0947\u091A\u0924\u0947 \u0939\u0948\u0902?",
+    kn: "ನೀವು ಏನು ಮಾರಾಟ ಮಾಡುತ್ತೀರಿ?",
     type: "single",
     options: [
-      { en: "Men's", hi: "\u092A\u0941\u0930\u0941\u0937" },
-      { en: "Women's", hi: "\u092E\u0939\u093F\u0932\u093E" },
-      { en: "Kids", hi: "\u092C\u091A\u094D\u091A\u0947" },
-      { en: "All categories", hi: "\u0938\u092D\u0940" },
+      { en: "Men's", kn: "ಪುರುಷರು" },
+      { en: "Women's", kn: "ಮಹಿಳೆಯರು" },
+      { en: "Kids", kn: "ಮಕ್ಕಳು" },
+      { en: "All categories", kn: "ಎಲ್ಲಾ ವಿಭಾಗಗಳು" },
     ],
   },
   {
     key: "q2_monthly_sales",
     en: "Monthly sales",
-    hi: "\u092E\u0939\u0940\u0928\u0947 \u0915\u0940 \u092C\u093F\u0915\u094D\u0930\u0940",
+    kn: "ತಿಂಗಳ ಮಾರಾಟ",
     type: "single",
     options: [
-      { en: "Under \u20B95L", hi: "\u20B95 \u0932\u093E\u0916 \u0938\u0947 \u0915\u092E" },
-      { en: "\u20B95\u201320L", hi: "\u20B95\u201320 \u0932\u093E\u0916" },
-      { en: "\u20B920\u201350L", hi: "\u20B920\u201350 \u0932\u093E\u0916" },
-      { en: "Above \u20B950L", hi: "\u20B950 \u0932\u093E\u0916 \u0938\u0947 \u091C\u093C\u094D\u092F\u093E\u0926\u093E" },
+      { en: "Under \u20B95L", kn: "\u20B95 ಲಕ್ಷಕ್ಕಿಂತ ಕಡಿಮೆ" },
+      { en: "\u20B95\u201320L", kn: "\u20B95\u201320 ಲಕ್ಷ" },
+      { en: "\u20B920\u201350L", kn: "\u20B920\u201350 ಲಕ್ಷ" },
+      { en: "Above \u20B950L", kn: "\u20B950 ಲಕ್ಷಕ್ಕಿಂತ ಹೆಚ್ಚು" },
     ],
   },
   {
     key: "q3_stock_records",
     en: "How do you keep stock records today?",
-    hi: "\u0906\u091C \u0938\u094D\u091F\u0949\u0915 \u0915\u093E \u0939\u093F\u0938\u093E\u092C \u0915\u0948\u0938\u0947 \u0930\u0916\u0924\u0947 \u0939\u0948\u0902?",
+    kn: "ಇಂದು ಸ್ಟಾಕ್ ದಾಖಲೆಗಳನ್ನು ಹೇಗೆ ಇಡುತ್ತೀರಿ?",
     type: "single",
     options: [
-      { en: "Register/Copy", hi: "\u0930\u091C\u093F\u0938\u094D\u091F\u0930/\u0915\u0949\u092A\u0940" },
-      { en: "Excel", hi: "\u090F\u0915\u094D\u0938\u0947\u0932" },
-      { en: "Billing software", hi: "\u092C\u093F\u0932\u093F\u0902\u0917 \u0938\u0949\u092B\u093C\u094D\u091F\u0935\u0947\u092F\u0930" },
-      { en: "From memory", hi: "\u092C\u0938 \u092F\u093E\u0926 \u0938\u0947" },
+      { en: "Register/Copy", kn: "ರಿಜಿಸ್ಟರ್/ಕಾಪಿ" },
+      { en: "Excel", kn: "ಎಕ್ಸೆಲ್" },
+      { en: "Billing software", kn: "ಬಿಲ್ಲಿಂಗ್ ಸಾಫ್ಟ್\u200Cವೇರ್" },
+      { en: "From memory", kn: "ನೆನಪಿನಿಂದ" },
     ],
   },
   {
     key: "q4_problems",
     en: "Biggest daily problem (pick up to 2)",
-    hi: "\u0930\u094B\u091C\u093C \u0915\u0940 \u0938\u092C\u0938\u0947 \u092C\u0921\u093C\u0940 \u092A\u0930\u0947\u0936\u093E\u0928\u0940 (2 \u0924\u0915 \u091A\u0941\u0928\u0947\u0902)",
+    kn: "ದಿನನಿತ್ಯದ ಅತಿದೊಡ್ಡ ಸಮಸ್ಯೆ (2 ಆಯ್ಕೆ ಮಾಡಿ)",
     type: "multi",
     max: 2,
     options: [
-      { en: "Unfolding too many pieces per customer", hi: "\u090F\u0915 \u0917\u094D\u0930\u093E\u0939\u0915 \u0915\u0947 \u0932\u093F\u090F \u092C\u0939\u0941\u0924 \u0915\u092A\u0921\u093C\u0947 \u0916\u094B\u0932\u0928\u093E" },
-      { en: "Don't know what's in stock", hi: "\u0915\u094C\u0928 \u0938\u093E \u092E\u093E\u0932 \u0939\u0948, \u092A\u0924\u093E \u0928\u0939\u0940\u0902" },
-      { en: "Old stock not selling", hi: "\u092A\u0941\u0930\u093E\u0928\u093E \u092E\u093E\u0932 \u0928\u0939\u0940\u0902 \u092C\u093F\u0915\u0924\u093E" },
-      { en: "Customers don't come back", hi: "\u0917\u094D\u0930\u093E\u0939\u0915 \u0926\u094B\u092C\u093E\u0930\u093E \u0928\u0939\u0940\u0902 \u0906\u0924\u0947" },
-      { en: "Handling online orders", hi: "\u0911\u0928\u0932\u093E\u0907\u0928 \u0911\u0930\u094D\u0921\u0930 \u0938\u0902\u092D\u093E\u0932\u0928\u093E \u092E\u0941\u0936\u094D\u0915\u093F\u0932" },
+      { en: "Unfolding too many pieces per customer", kn: "ಒಬ್ಬ ಗ್ರಾಹಕನಿಗೆ ಹಲವು ಬಟ್ಟೆ ಬಿಡಿಸುವುದು" },
+      { en: "Don't know what's in stock", kn: "ಯಾವ ಸ್ಟಾಕ್ ಇದೆ ಎಂದು ಗೊತ್ತಿಲ್ಲ" },
+      { en: "Old stock not selling", kn: "ಹಳೆಯ ಸ್ಟಾಕ್ ಮಾರಾಟವಾಗುತ್ತಿಲ್ಲ" },
+      { en: "Customers don't come back", kn: "ಗ್ರಾಹಕರು ಮತ್ತೆ ಬರುವುದಿಲ್ಲ" },
+      { en: "Handling online orders", kn: "ಆನ್\u200Cಲೈನ್ ಆರ್ಡರ್ ನಿರ್ವಹಣೆ ಕಷ್ಟ" },
     ],
   },
   {
     key: "q5_online",
     en: "Do you sell online today?",
-    hi: "\u0915\u094D\u092F\u093E \u0906\u092A \u0911\u0928\u0932\u093E\u0907\u0928 \u092C\u0947\u091A\u0924\u0947 \u0939\u0948\u0902?",
+    kn: "ನೀವು ಇಂದು ಆನ್\u200Cಲೈನ್\u200Cನಲ್ಲಿ ಮಾರಾಟ ಮಾಡುತ್ತೀರಾ?",
     type: "single",
     options: [
-      { en: "No", hi: "\u0928\u0939\u0940\u0902" },
-      { en: "WhatsApp/Instagram only", hi: "\u0938\u093F\u0930\u094D\u092B\u093C WhatsApp/Instagram" },
-      { en: "Marketplace", hi: "\u092E\u093E\u0930\u094D\u0915\u0947\u091F\u092A\u094D\u0932\u0947\u0938" },
-      { en: "Own website", hi: "\u0905\u092A\u0928\u0940 \u0935\u0947\u092C\u0938\u093E\u0907\u091F" },
+      { en: "No", kn: "ಇಲ್ಲ" },
+      { en: "WhatsApp/Instagram only", kn: "WhatsApp/Instagram ಮಾತ್ರ" },
+      { en: "Marketplace", kn: "ಮಾರ್ಕೆಟ್\u200Cಪ್ಲೇಸ್" },
+      { en: "Own website", kn: "ಸ್ವಂತ ವೆಬ್\u200Cಸೈಟ್" },
     ],
   },
   {
     key: "q6_useful",
     en: "Which part was most useful?",
-    hi: "\u0915\u094C\u0928 \u0938\u093E \u0939\u093F\u0938\u094D\u0938\u093E \u0938\u092C\u0938\u0947 \u0915\u093E\u092E \u0915\u093E \u0932\u0917\u093E?",
+    kn: "ಯಾವ ಭಾಗ ಅತ್ಯಂತ ಉಪಯುಕ್ತವಾಗಿತ್ತು?",
     type: "single",
     options: [
-      { en: "Digitize", hi: "\u0921\u093F\u091C\u093F\u091F\u093E\u0907\u091C\u093C" },
-      { en: "Amplify", hi: "\u090F\u092E\u094D\u092A\u094D\u0932\u093F\u092B\u093C\u093E\u0908" },
-      { en: "Shopify", hi: "\u0936\u0949\u092A\u093F\u092B\u093C\u093E\u0908" },
+      { en: "Digitize", kn: "ಡಿಜಿಟೈಜ್" },
+      { en: "Amplify", kn: "ಆಂಪ್ಲಿಫೈ" },
+      { en: "Shopify", kn: "ಶಾಪಿಫೈ" },
     ],
   },
   {
     key: "q7_feature",
     en: "Which one feature would you start using tomorrow?",
-    hi: "\u0915\u094C\u0928 \u0938\u0940 \u090F\u0915 \u0938\u0941\u0935\u093F\u0927\u093E \u0915\u0932 \u0938\u0947 \u0907\u0938\u094D\u0924\u0947\u092E\u093E\u0932 \u0915\u0930\u0947\u0902\u0917\u0947?",
+    kn: "ನಾಳೆಯಿಂದ ಯಾವ ಒಂದು ಸೌಲಭ್ಯವನ್ನು ಬಳಸಲು ಶುರು ಮಾಡುತ್ತೀರಿ?",
     type: "single",
     options: [
-      { en: "AI Model Photos", hi: "AI \u092E\u0949\u0921\u0932 \u092B\u093C\u094B\u091F\u094B" },
-      { en: "Scan to Catalog", hi: "\u0938\u094D\u0915\u0948\u0928 \u0938\u0947 \u0915\u0948\u091F\u0932\u0949\u0917" },
-      { en: "Live Stock Board", hi: "\u0932\u093E\u0907\u0935 \u0938\u094D\u091F\u0949\u0915" },
-      { en: "WhatsApp Blast", hi: "WhatsApp \u092C\u094D\u0932\u093E\u0938\u094D\u091F" },
-      { en: "Lucky Coupon Drop", hi: "\u0932\u0915\u0940 \u0915\u0942\u092A\u0928" },
-      { en: "Online Store", hi: "\u0911\u0928\u0932\u093E\u0907\u0928 \u0926\u0941\u0915\u093E\u0928" },
+      { en: "AI Model Photos", kn: "AI ಮಾಡೆಲ್ ಫೋಟೋ" },
+      { en: "Scan to Catalog", kn: "ಸ್ಕ್ಯಾನ್ ಟು ಕ್ಯಾಟಲಾಗ್" },
+      { en: "Live Stock Board", kn: "ಲೈವ್ ಸ್ಟಾಕ್" },
+      { en: "WhatsApp Blast", kn: "WhatsApp ಬ್ಲಾಸ್ಟ್" },
+      { en: "Lucky Coupon Drop", kn: "ಲಕ್ಕಿ ಕೂಪನ್" },
+      { en: "Online Store", kn: "ಆನ್\u200Cಲೈನ್ ಅಂಗಡಿ" },
     ],
   },
   {
     key: "q8_cost",
     en: "Comfortable monthly cost to avail such features?",
-    hi: "\u0907\u0928 \u0938\u0941\u0935\u093F\u0927\u093E\u0913\u0902 \u0915\u0947 \u0932\u093F\u090F \u092E\u0939\u0940\u0928\u0947 \u0915\u093E \u0915\u093F\u0924\u0928\u093E \u0916\u0930\u094D\u091A \u0920\u0940\u0915 \u0932\u0917\u0947\u0917\u093E?",
+    kn: "ಈ ಸೌಲಭ್ಯಗಳಿಗೆ ತಿಂಗಳಿಗೆ ಎಷ್ಟು ಖರ್ಚು ಸರಿ ಎನಿಸುತ್ತದೆ?",
     type: "single",
     options: [
-      { en: "\u20B97,000\u201310,000", hi: "\u20B97,000\u201310,000" },
-      { en: "\u20B910,000\u201315,000", hi: "\u20B910,000\u201315,000" },
-      { en: "\u20B915,000\u201320,000", hi: "\u20B915,000\u201320,000" },
-      { en: "Above \u20B920,000", hi: "\u20B920,000 \u0938\u0947 \u091C\u093C\u094D\u092F\u093E\u0926\u093E" },
-      { en: "Too expensive for me", hi: "\u092E\u0947\u0930\u0947 \u0932\u093F\u090F \u092C\u0939\u0941\u0924 \u092E\u0939\u0902\u0917\u093E \u0939\u0948" },
+      { en: "\u20B97,000\u201310,000", kn: "\u20B97,000\u201310,000" },
+      { en: "\u20B910,000\u201315,000", kn: "\u20B910,000\u201315,000" },
+      { en: "\u20B915,000\u201320,000", kn: "\u20B915,000\u201320,000" },
+      { en: "Above \u20B920,000", kn: "\u20B920,000ಕ್ಕಿಂತ ಹೆಚ್ಚು" },
+      { en: "Too expensive for me", kn: "ನನಗೆ ತುಂಬಾ ದುಬಾರಿ" },
     ],
   },
   {
     key: "q9_operator",
     en: "Who will operate it in the shop?",
-    hi: "\u0926\u0941\u0915\u093E\u0928 \u092E\u0947\u0902 \u0907\u0938\u0947 \u0915\u094C\u0928 \u091A\u0932\u093E\u090F\u0917\u093E?",
+    kn: "ಅಂಗಡಿಯಲ್ಲಿ ಇದನ್ನು ಯಾರು ನಡೆಸುತ್ತಾರೆ?",
     type: "single",
     options: [
-      { en: "Myself", hi: "\u092E\u0948\u0902 \u0916\u0941\u0926" },
-      { en: "Staff", hi: "\u0938\u094D\u091F\u093E\u092B\u093C" },
-      { en: "Family member", hi: "\u092A\u0930\u093F\u0935\u093E\u0930 \u0915\u093E \u0915\u094B\u0908 \u0938\u0926\u0938\u094D\u092F" },
-      { en: "Not sure", hi: "\u092A\u0924\u093E \u0928\u0939\u0940\u0902" },
+      { en: "Myself", kn: "ನಾನೇ" },
+      { en: "Staff", kn: "ಸಿಬ್ಬಂದಿ" },
+      { en: "Family member", kn: "ಕುಟುಂಬದ ಸದಸ್ಯ" },
+      { en: "Not sure", kn: "ಗೊತ್ತಿಲ್ಲ" },
     ],
   },
   {
     key: "q10_contact",
     en: "Name & WhatsApp number (optional)",
-    hi: "\u0928\u093E\u092E \u0914\u0930 WhatsApp \u0928\u0902\u092C\u0930 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
+    kn: "ಹೆಸರು ಮತ್ತು WhatsApp ನಂಬರ್ (ಐಚ್ಛಿಕ)",
     type: "contact",
   },
 ];
@@ -136,6 +137,7 @@ export default function Survey() {
       setStep((s) => s + 1);
     } else {
       saveSurveyResponse(answers);
+      persistToSheet(answers);
       setSubmitted(true);
     }
   };
@@ -157,9 +159,9 @@ export default function Survey() {
               <path d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-indigo-deep">{"Thank you / धन्यवाद"}</h2>
+          <h2 className="text-2xl font-bold text-indigo-deep">{"Thank you / ಧನ್ಯವಾದಗಳು"}</h2>
           <p className="text-gray-500 mt-2 text-sm">Your response has been saved.</p>
-          <p className="text-gray-400 mt-1 text-xs font-hind">{"आपका जवाब सुरक्षित हो गया है।"}</p>
+          <p className="text-gray-400 mt-1 text-xs font-hind">{"ನಿಮ್ಮ ಉತ್ತರ ಸುರಕ್ಷಿತವಾಗಿ ಉಳಿಸಲಾಗಿದೆ."}</p>
           <div className="mt-6 flex justify-center gap-3">
             <button
               onClick={() => { setStep(0); setAnswers({}); setSubmitted(false); }}
@@ -189,7 +191,7 @@ export default function Survey() {
             <div className="sticky top-20 bg-gradient-to-br from-indigo-deep to-[#2D2A6E] rounded-2xl p-8 text-white">
               <h2 className="text-2xl font-bold mb-2">Quick Survey</h2>
               <p className="text-white/60 text-sm mb-6">Help us understand your needs. Takes 2 minutes.</p>
-              <p className="text-white/40 text-xs font-hind mb-8">{"अपनी ज़रूरतें बताएं। सिर्फ 2 मिनट।"}</p>
+              <p className="text-white/40 text-xs font-hind mb-8">{"ನಿಮ್ಮ ಅಗತ್ಯಗಳನ್ನು ತಿಳಿಸಿ. ಕೇವಲ 2 ನಿಮಿಷ."}</p>
 
               {/* Progress */}
               <div className="space-y-2">
@@ -238,7 +240,7 @@ export default function Survey() {
             <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm fade-in" key={step}>
               <div className="text-xs text-gray-400 mb-1">{step + 1} of {questions.length}</div>
               <h3 className="text-lg font-semibold text-text-main mb-1">{q.en}</h3>
-              <p className="text-sm text-gray-400 font-hind mb-6">{q.hi}</p>
+              <p className="text-sm text-gray-400 font-hind mb-6">{q.kn}</p>
 
               {q.type === "single" && (
                 <div className="space-y-2">
@@ -258,7 +260,7 @@ export default function Survey() {
                       </div>
                       <div>
                         <span className="text-sm font-medium">{opt.en}</span>
-                        <span className="block text-xs text-gray-400 font-hind">{opt.hi}</span>
+                        <span className="block text-xs text-gray-400 font-hind">{opt.kn}</span>
                       </div>
                       <input type="radio" name={q.key} checked={answers[q.key] === opt.en} onChange={() => setAnswer(q.key, opt.en)} className="sr-only" />
                     </label>
@@ -289,7 +291,7 @@ export default function Survey() {
                         </div>
                         <div>
                           <span className="text-sm font-medium">{opt.en}</span>
-                          <span className="block text-xs text-gray-400 font-hind">{opt.hi}</span>
+                          <span className="block text-xs text-gray-400 font-hind">{opt.kn}</span>
                         </div>
                         <input
                           type="checkbox"
@@ -312,7 +314,7 @@ export default function Survey() {
               {q.type === "contact" && (
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm text-gray-500 block mb-1.5">{"Your name / आपका नाम"}</label>
+                    <label className="text-sm text-gray-500 block mb-1.5">{"Your name / ನಿಮ್ಮ ಹೆಸರು"}</label>
                     <input
                       type="text"
                       value={answers.name || ""}
@@ -322,7 +324,7 @@ export default function Survey() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm text-gray-500 block mb-1.5">{"WhatsApp number / WhatsApp नंबर"}</label>
+                    <label className="text-sm text-gray-500 block mb-1.5">{"WhatsApp number / WhatsApp ನಂಬರ್"}</label>
                     <input
                       type="tel"
                       value={answers.whatsapp || ""}
@@ -340,7 +342,7 @@ export default function Survey() {
                     />
                     <div>
                       <span className="text-sm">Can we contact you for a free trial?</span>
-                      <span className="block text-xs text-gray-400 font-hind">{"क्या हम मुफ़्त ट्रायल के लिए संपर्क कर सकते हैं?"}</span>
+                      <span className="block text-xs text-gray-400 font-hind">{"ಉಚಿತ ಟ್ರಯಲ್\u200Cಗಾಗಿ ನಾವು ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಬಹುದೇ?"}</span>
                     </div>
                   </label>
                 </div>
@@ -351,7 +353,7 @@ export default function Survey() {
                 disabled={!canProceed()}
                 className="mt-6 w-full bg-indigo-deep text-white py-3.5 rounded-xl text-sm font-medium btn-hover disabled:opacity-30 transition-all"
               >
-                {step === questions.length - 1 ? "Submit / \u091C\u092E\u093E \u0915\u0930\u0947\u0902" : "Next"}
+                {step === questions.length - 1 ? "Submit / ಸಲ್ಲಿಸಿ" : "Next"}
               </button>
             </div>
           </div>
